@@ -7,6 +7,7 @@ import (
 	"net"
 	"net/http"
 	"net/url"
+	"os"
 	"strconv"
 
 	"github.com/sirupsen/logrus"
@@ -116,7 +117,10 @@ func DemoDoConnect(request *http.Request) (guac.Tunnel, error) {
 	config.AudioMimetypes = []string{"audio/L16", "rate=44100", "channels=2"}
 
 	logrus.Debug("Connecting to guacd")
-	addr, err := net.ResolveTCPAddr("tcp", "127.0.0.1:4822")
+
+	guacdHost := os.Getenv("GUACD_SERVICE_HOST")
+	guacdPort := os.Getenv("GUACD_SERVICE_PORT")
+	addr, err := net.ResolveTCPAddr("tcp", guacdHost+":"+guacdPort)
 
 	conn, err := net.DialTCP("tcp", nil, addr)
 	if err != nil {
